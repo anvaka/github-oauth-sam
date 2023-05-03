@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: GitHub OAuth Lambda function and API Gateway
+
+Parameters:
+  GitHubClientSecretDev:
+    Type: String
+    Description: The client secret for your GitHub OAuth App - dev mode
+  GitHubClientSecretProd:
+    Type: String
+    Description: The client secret for your GitHub OAuth App - production
+
+Resources:
+  GitHubOAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GitHubOAuthFunction
+      Runtime: python3.8
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          GITHUB_CLIENT_SECRET_DEV: !Ref GitHubClientSecretDev
+          GITHUB_CLIENT_SECRET_PROD: !Ref GitHubClientSecretProd
+      Events:
+        GitHubOAuthApi:
+          Type: Api
+          Properties:
+            Path: /github-oauth
+            Method: GET
+        GitHubOAuthApiOptions:
+          Type: Api
+          Properties:
+            Path: /github-oauth
+            Method: OPTIONS
+
+Outputs:
+  GitHubOAuthApiEndpoint:
+    Description: API Gateway endpoint URL for GitHub OAuth
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/github-oauth/"
