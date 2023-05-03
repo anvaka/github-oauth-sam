@@ -21,3 +21,11 @@ If you want to use it for your own needs, you might want to change the client id
 GITHUB_CLIENT_ID_DEV = "your_dev_client_id" 
 GITHUB_CLIENT_ID_PROD = "your_prod_client_id"
 ```
+
+Once deployed, you can use it to get a token for your app:
+
+``` js
+fetch('https://your_api_id.execute-api.us-east-1.amazonaws.com/Prod/github-oauth/?client=' + clientId + '&code=' + code)
+  .then(response => response.json())
+  .then(data => console.log(data));
+```
